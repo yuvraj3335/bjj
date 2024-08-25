@@ -1,50 +1,44 @@
-const express = require("express");
+const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json()); 
-app
-  .route("/bfhl")
-  .get((req, res) => {
-    
-    res.status(200).json({ operation_code: 1 });
-  })
-  .post((req, res) => {
-   
-    const data = req.body.data || []; 
-    const numbers = [];
-    const alphabets = [];
-    let highest_lowercase_alphabet = "";
+app.use(bodyParser.json());
 
-   
-    for (const item of data) {
-      if (!isNaN(item)) {
-        
-        numbers.push(item);
-      } else if (item.length === 1 && /^[a-zA-Z]$/.test(item)) {
-      
-        alphabets.push(item);
+// POST endpoint to process data
+app.post('/bfhl', (req, res) => {
+    const { data } = req.body;
 
-        
-        if (item === item.toLowerCase() && item > highest_lowercase_alphabet) {
-          highest_lowercase_alphabet = item;
-        }
-      }
-    }
+    const user_id = "Yuvraj_Muley_03_04_2002"; 
+    const email = "yuvraj.muley2021@vitbhopal.ac.in"; 
+    const roll_number = "21BCE10064"; 
 
-    
+    const numbers = data.filter(item => !isNaN(item));
+    const alphabets = data.filter(item => isNaN(item));
+    const lowercaseAlphabets = alphabets.filter(char => char === char.toLowerCase()); 
+
+    const highestLowercaseAlphabet = lowercaseAlphabets.length > 0 ? 
+        [lowercaseAlphabets.sort().reverse()[0]] : [];
+
     res.json({
-      is_success: true,
-      user_id: "john_doe_17091999", 
-      email: "john@xyz.com",        
-      roll_number: "ABCD123",       
-      numbers: numbers,
-      alphabets: alphabets,
-      highest_lowercase_alphabet: highest_lowercase_alphabet ? [highest_lowercase_alphabet] : [],
+        is_success: true,
+        user_id: user_id,
+        email: email,
+        roll_number: roll_number,
+        numbers: numbers,
+        alphabets: alphabets,
+        highest_lowercase_alphabet: highestLowercaseAlphabet
     });
-  });
+});
 
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.get('/bfhl', (req, res) => {
+    res.status(200).json({
+        operation_code: 1
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
