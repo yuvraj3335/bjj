@@ -1,17 +1,19 @@
-const express = require('express');
+const express = require('express')
+const cors  = require('cors')
 const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 // POST endpoint to process data
 app.post('/bfhl', (req, res) => {
     const { data } = req.body;
 
     const user_id = "Yuvraj_Muley_03_04_2002"; 
-    const email = "yuvraj.muley2021@vitbhopal.ac.in"; 
+    const email = "yuvraj.muley2021@vitbhopal.ac.in";
     const roll_number = "21BCE10064"; 
 
     const numbers = data.filter(item => !isNaN(item));
@@ -32,7 +34,7 @@ app.post('/bfhl', (req, res) => {
     });
 });
 
-
+// GET endpoint to return operation code
 app.get('/bfhl', (req, res) => {
     res.status(200).json({
         operation_code: 1
